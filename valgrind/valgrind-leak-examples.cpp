@@ -52,10 +52,21 @@ int main(int argc, char **argv) {
             free(ptr);
 
         char *p = new char[ALLOC_BUF_LEN];
-        if (ptr)
-            memset(ptr, '3', ALLOC_BUF_LEN);
+        if (p)
+            memset(p, '3', ALLOC_BUF_LEN);
         if (!simulate_leaks)
             delete[] p;
+
+        cout << "Continue more iterations (y/n): ";
+        char user_resp[10];
+        cin >> user_resp;
+        keep_looping = (user_resp[0] == 'y');
+
+        if(keep_looping) {
+            cout << "Simulate leaks (y/n): ";
+            cin >> user_resp;
+            simulate_leaks = (user_resp[0] == 'y');
+        }
     }
     return 0;
 }
