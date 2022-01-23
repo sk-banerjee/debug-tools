@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sys/mman.h>
 #include <cstring>
+#include <valgrind/valgrind.h>
 
 using namespace std;
 
@@ -13,6 +14,7 @@ void * my_alloc(size_t sz, int prot, int flags) {
         cout << "mmap() failed" << endl;
         return NULL;
     }
+    VALGRIND_MALLOCLIKE_BLOCK(ptr, sz, 0, 0);
     return ptr;
 }
 
@@ -22,6 +24,7 @@ int my_free(void *ptr, size_t sz) {
         cout << "munmap() failed" << endl;
         return -1;
     }
+    VALGRIND_FREELIKE_BLOCK(ptr, 0);
     return 0;
 }
 
