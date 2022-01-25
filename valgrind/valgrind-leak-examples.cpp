@@ -2,6 +2,7 @@
 #include <sys/mman.h>
 #include <cstring>
 #include <valgrind/valgrind.h>
+#include <cstdlib>
 
 using namespace std;
 
