@@ -58,6 +58,8 @@ void llist::llist_print( ) {
     cout << endl;
 }
 
+bool do_terminate = true;
+
 void print_hello() {
     string s = "Hello World";
     char* p = strdup(s.c_str()); /* 12 bytes in 1 blocks are definitely lost */
@@ -74,10 +76,13 @@ void print_world() {
     cout << p;
     p += 6;
     cout << " " << p << endl; 
-    terminate(); // This call leads to possibly lost line in valgrind logs.
+    if (do_terminate)
+        terminate(); // This call leads to possibly lost line in valgrind logs.
 }
 
-int main() {
+int main(int argc, char **argv) {
+    if (argc > 1)
+        do_terminate = false;
     /* No nodes from list 1 leak are freed */
     llist *linked_list_1 = new llist; /* 8 bytes in 1 blocks are still reachable */
     for (int i = 100; i <= 104; i++) {
