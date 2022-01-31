@@ -24,7 +24,7 @@ void mismatched_mmap_free(size_t sz, int prot, int flags) {
         return;
     }
     VALGRIND_MALLOCLIKE_BLOCK(ptr, sz, 0, 0);
-    free(ptr);
+    free(ptr); //Mismatched free() / delete / delete []
 }
 
 void simulate_invalid_read() {
