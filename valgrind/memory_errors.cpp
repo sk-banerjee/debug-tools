@@ -74,6 +74,12 @@ void src_dest_overlap() {
     delete[] ptr;
 }
 
+void read_below_stack_pointer(int i) {
+    int *ptr = &i;
+
+    cout << *(ptr - 128) << endl;
+}
+
 int main() {
     mismatched_alloc_free();
     simulate_invalid_read();
@@ -84,5 +90,6 @@ int main() {
     src_dest_overlap();
     mismatched_mmap_free(4096, PROT_READ | PROT_WRITE,
                          MAP_SHARED | MAP_ANONYMOUS);
+    read_below_stack_pointer(10);
     return 0;
 }
