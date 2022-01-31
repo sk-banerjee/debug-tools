@@ -2,6 +2,8 @@
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
+#include <sys/mman.h>
+#include <valgrind/valgrind.h>
 
 using namespace std;
 
@@ -13,6 +15,16 @@ void mismatched_alloc_free() {
     ptr = new char[10];
     memset(ptr, 'Y', 10);
     free(ptr); // Mismatched free() / delete / delete []
+}
+
+void mismatched_mmap_free(size_t sz, int prot, int flags) {
+    void * ptr = mmap(NULL, sz, prot, flags, 0, 0);
+    if (ptr == MAP_FAILED) {
+        cout << "mmap() failed" << endl;
+        return;
+    }
+    VALGRIND_MALLOCLIKE_BLOCK(ptr, sz, 0, 0);
+    free(ptr);
 }
 
 void simulate_invalid_read() {
@@ -70,5 +82,7 @@ int main() {
     use_uninitialised_in_syscall();
     illegal_free();
     src_dest_overlap();
+    mismatched_mmap_free(4096, PROT_READ | PROT_WRITE,
+                         MAP_SHARED | MAP_ANONYMOUS);
     return 0;
 }
