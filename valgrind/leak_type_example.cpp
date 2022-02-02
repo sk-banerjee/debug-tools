@@ -8,14 +8,17 @@ class Node {
     int data;
     char elements[16];
     Node *next;
+    int *nonce_ptr;
 
 public:
-    Node() : data(0), next(nullptr) { }
+    Node() : data(0), next(nullptr) { nonce_ptr = (int *)malloc(sizeof(int)); cout << "CONS" << endl; }
     Node(int d) : data(d), next(nullptr) { }
     Node(int d, Node *nxt) : data(d), next(nxt) { }
+    ~Node() { free(nonce_ptr); cout << "DEST" << endl; }
     int get_data() {return this->data; }
     Node *get_next() { return this->next; }
     void set_next(Node *addr) { this->next = addr; }
+    void set_nonce(int v) {*(this->nonce_ptr) = v; }
 };
 
 class llist {
@@ -80,6 +83,10 @@ void print_world() {
         terminate(); // This call leads to possibly lost line in valgrind logs.
 }
 
+void nonce_value( Node n, int v) {
+    n.set_nonce(v);
+}
+
 int main(int argc, char **argv) {
     if (argc > 1)
         do_terminate = false;
@@ -110,6 +117,8 @@ int main(int argc, char **argv) {
     linked_list_3->llist_free();
     linked_list_3->llist_print();
     delete linked_list_3;
+
+    nonce_value(Node(), 0xff);
 
     thread thread_one (print_hello);
 
